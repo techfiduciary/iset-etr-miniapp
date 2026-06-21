@@ -44,10 +44,15 @@ export interface IssueResult {
 }
 
 export async function issueEpn(input: EpnInput): Promise<IssueResult> {
+  return issueEtr('ePN', input)
+}
+
+// Generic issuance for any eTR instrument (ePN, eINV, eBL, eWR, eLC, eBE).
+export async function issueEtr(type: string, input: EpnInput): Promise<IssueResult> {
   const res = await fetch(`${BASE}/api/etr/issue`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...authHeaders() },
-    body: JSON.stringify({ type: 'ePN', ...input }),
+    body: JSON.stringify({ type, ...input }),
   })
   return asJson(res)
 }
