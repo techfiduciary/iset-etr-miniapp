@@ -4,6 +4,7 @@ import { useAccount, useConnect, useDisconnect, useChainId, useSwitchChain, useS
 import { ACTIVE_CHAIN } from '../lib/chain'
 import { isMiniPay } from '../wagmi'
 import { siweSignIn, signOut } from '../lib/siwe'
+import { useToast } from '../lib/toast'
 
 function short(a?: string) { return a ? `${a.slice(0, 6)}…${a.slice(-4)}` : '' }
 
@@ -16,6 +17,7 @@ export default function Connect({
   const chainId = useChainId()
   const { switchChainAsync } = useSwitchChain()
   const { signMessageAsync } = useSignMessage()
+  const notify = useToast()
   const [busy, setBusy] = useState(false)
   const [err, setErr] = useState('')
 
@@ -31,6 +33,12 @@ export default function Connect({
     const c = connectors[0]
     if (!c) { setErr('No wallet found. Open in MiniPay or install a Celo wallet.'); return }
     connect({ connector: c })
+  }
+
+  async function copyAddr() {
+    if (!address) return
+    try { await navigator.clipboard.writeText(address); notify('Wallet address copied') }
+    catch { notify('Copy failed — long-press to copy', 'err') }
   }
 
   async function handleSignIn() {
@@ -58,7 +66,7 @@ export default function Connect({
 
   return (
     <div className="connect">
-      <span className="pill" title={address}>{short(address)}</span>
+      <button className="pill" title={`${address} — tap to copy`} onClick={copyAddr}>{short(address)} <IconWallet size={11} stroke={1.75} /></button>
       {signedIn
         ? <button className="btn ghost" onClick={handleSignOut}>Sign out</button>
         : <button className="btn" onClick={handleSignIn} disabled={busy}>{busy ? 'Signing…' : 'Sign in'}</button>}

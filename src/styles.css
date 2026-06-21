@@ -29,7 +29,7 @@ body{background:var(--bg);color:var(--ink);font:15px/1.5 "Segoe UI Variable","Se
 .btn.ghost{background:transparent;border:1px solid var(--line);color:var(--ink);font-weight:600}
 .btn:disabled{opacity:.55;cursor:default}
 .connect{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
-.pill{background:var(--bg);border:1px solid var(--line);border-radius:999px;padding:5px 10px;font-size:12px;font-family:ui-monospace,monospace}
+.pill{display:inline-flex;align-items:center;gap:5px;background:var(--bg);border:1px solid var(--line);color:var(--ink);border-radius:999px;padding:5px 10px;font-size:12px;font-family:ui-monospace,monospace;cursor:pointer}
 .result{margin-top:16px;border-top:1px solid var(--line);padding-top:14px}
 .actions{display:flex;gap:8px;margin:12px 0}
 .actions .btn{flex:1}
