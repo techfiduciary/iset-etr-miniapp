@@ -29,7 +29,7 @@ export default function App() {
     <div className="app">
       <header className="topbar">
         <div className="brand">
-          <img className="logo" src="/icon.png" alt="" width="26" height="26" />
+          <img className="logo" src="/icon.png" alt="eInvoice" width="34" height="34" />
           <div className="brandtext">
             <span className="mark">eInvoice</span>
             <span className="sub">by ISET · on MiniPay</span>

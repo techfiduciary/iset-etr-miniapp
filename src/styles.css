@@ -7,7 +7,7 @@
 html,body{margin:0;padding:0}
 body{background:var(--bg);color:var(--ink);font:15px/1.5 "Segoe UI Variable","Segoe UI",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
 .app{max-width:520px;margin:0 auto;padding:0 14px 40px;min-height:100vh}
-.topbar{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:14px 2px;position:sticky;top:0;background:linear-gradient(var(--bg),rgba(11,31,58,.86));backdrop-filter:blur(6px);z-index:5}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:14px 4px;position:sticky;top:0;background:linear-gradient(var(--bg),rgba(11,31,58,.86));backdrop-filter:blur(6px);z-index:5}
 .brand{display:flex;align-items:center;gap:9px}
 .brandtext{display:flex;flex-direction:column;line-height:1.05}
 .logo{border-radius:7px;display:block}

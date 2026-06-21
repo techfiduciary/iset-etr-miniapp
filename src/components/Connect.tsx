@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { IconWallet } from '@tabler/icons-react'
 import { useAccount, useConnect, useDisconnect, useChainId, useSwitchChain, useSignMessage } from 'wagmi'
 import { ACTIVE_CHAIN } from '../lib/chain'
 import { isMiniPay } from '../wagmi'
@@ -47,7 +48,9 @@ export default function Connect({
   if (!isConnected) {
     return (
       <div className="connect">
-        <button className="btn" onClick={handleConnect} disabled={isPending}>{isPending ? 'Connecting…' : 'Connect wallet'}</button>
+        <button className="iconbtn" aria-label="Connect wallet" title="Connect wallet" onClick={handleConnect} disabled={isPending}>
+          <IconWallet size={18} stroke={1.75} />
+        </button>
         {err && <p className="err">{err}</p>}
       </div>
     )
