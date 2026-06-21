@@ -90,3 +90,25 @@ export async function siweVerify(message: string, signature: string): Promise<{ 
 export function canonicalVerifyUrl(id: string): string {
   return `${BASE}/record/?id=${encodeURIComponent(id)}`
 }
+
+// ── Subscriber profile (white-label branding) ─────────────────────────────────
+export interface SubscriberProfile { name?: string; logo?: string | null; color?: string; verify?: string }
+
+export async function getSubscriber(): Promise<any> {
+  const res = await fetch(`${BASE}/api/subscriber`, { headers: authHeaders() })
+  return asJson(res)
+}
+export async function saveSubscriber(p: SubscriberProfile): Promise<any> {
+  const res = await fetch(`${BASE}/api/subscriber`, {
+    method: 'POST', headers: { 'Content-Type': 'application/json', ...authHeaders() },
+    body: JSON.stringify(p),
+  })
+  return asJson(res)
+}
+
+// ── My records ────────────────────────────────────────────────────────────────
+export async function listEtr(): Promise<any[]> {
+  const res = await fetch(`${BASE}/api/etr/list`, { headers: authHeaders() })
+  const body = await asJson(res)
+  return body?.records || body?.out || body?.items || (Array.isArray(body) ? body : [])
+}
