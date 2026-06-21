@@ -1,0 +1,32 @@
+{
+  "name": "iset-etr-miniapp",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "ISET eTR MiniApp — verify + issue electronic transferable records inside MiniPay/Celo. Sovereign issuer + registry stay on ISET; Celo is an interoperability + settlement bridge only.",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "deploy": "npm run build && wrangler pages deploy dist --project-name=iset-etr-miniapp --branch=main"
+  },
+  "dependencies": {
+    "@noble/hashes": "^1.5.0",
+    "@noble/post-quantum": "^0.2.1",
+    "@tanstack/react-query": "^5.56.2",
+    "qrcode": "^1.5.4",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "viem": "^2.21.19",
+    "wagmi": "^2.12.17"
+  },
+  "devDependencies": {
+    "@types/qrcode": "^1.5.5",
+    "@types/react": "^18.3.11",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^4.3.2",
+    "typescript": "^5.6.2",
+    "vite": "^5.4.8",
+    "wrangler": "^3.80.0"
+  }
+}
