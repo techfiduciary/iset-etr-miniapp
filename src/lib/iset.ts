@@ -92,7 +92,10 @@ export function canonicalVerifyUrl(id: string): string {
 }
 
 // ── Subscriber profile (white-label branding) ─────────────────────────────────
-export interface SubscriberProfile { name?: string; logo?: string | null; color?: string; verify?: string }
+export interface SubscriberProfile {
+  name?: string; logo?: string | null; color?: string; verify?: string
+  tin?: string; address?: string; email?: string
+}
 
 export async function getSubscriber(): Promise<any> {
   const res = await fetch(`${BASE}/api/subscriber`, { headers: authHeaders() })
@@ -116,5 +119,14 @@ export async function listEtr(): Promise<any[]> {
 // Re-verify a single ledger event against the audit trail (court-admissible).
 export async function getAudit(id: string): Promise<any> {
   const res = await fetch(`${BASE}/api/audit/${encodeURIComponent(id)}`)
+  return asJson(res)
+}
+
+// Advance an eINV's lifecycle: discharge (mark paid), transfer (assign), pledge, release.
+export async function transferEtr(etr_id: string, action: string, opts: { to_ref?: string; note?: string } = {}): Promise<any> {
+  const res = await fetch(`${BASE}/api/etr/transfer`, {
+    method: 'POST', headers: { 'Content-Type': 'application/json', ...authHeaders() },
+    body: JSON.stringify({ etr_id, action, ...opts }),
+  })
   return asJson(res)
 }

@@ -6,9 +6,10 @@ import Verify from './components/Verify'
 import Issue from './components/Issue'
 import Invoices from './components/Invoices'
 import Brand from './components/Brand'
+import Legal from './components/Legal'
 import { IS_TESTNET, ACTIVE_CHAIN } from './lib/chain'
 
-type Tab = 'home' | 'issue' | 'invoices' | 'verify' | 'brand'
+type Tab = 'home' | 'issue' | 'invoices' | 'verify' | 'brand' | 'legal'
 
 export default function App() {
   const [tab, setTab] = useState<Tab>('home')
@@ -21,7 +22,7 @@ export default function App() {
     const p = new URLSearchParams(window.location.search)
     const id = p.get('id'); const t = p.get('tab') as Tab | null
     if (id) { setDeepId(id); setTab('verify') }
-    else if (t && ['issue', 'invoices', 'verify', 'brand'].includes(t)) setTab(t)
+    else if (t && ['issue', 'invoices', 'verify', 'brand', 'legal'].includes(t)) setTab(t)
   }, [])
 
   return (
@@ -59,9 +60,13 @@ export default function App() {
         {tab === 'invoices' && <Invoices signedIn={signedIn} onOpen={(id) => { setVerifyId(id); setTab('verify') }} />}
         {tab === 'verify' && <Verify initialId={verifyId || deepId} />}
         {tab === 'brand' && <Brand signedIn={signedIn} />}
+        {tab === 'legal' && <Legal />}
       </main>
 
       <footer className="foot">
+        <div className="footlinks">
+          <button onClick={() => setTab('brand')}>Brand</button> · <button onClick={() => setTab('legal')}>Terms &amp; privacy</button>
+        </div>
         Issuer &amp; registry: ISET · signatures ML-DSA-65 (post-quantum). Celo is a settlement &amp; notarisation bridge — the registry is the point of control.
       </footer>
     </div>
