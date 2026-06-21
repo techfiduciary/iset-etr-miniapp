@@ -112,3 +112,9 @@ export async function listEtr(): Promise<any[]> {
   const body = await asJson(res)
   return body?.records || body?.out || body?.items || (Array.isArray(body) ? body : [])
 }
+
+// Re-verify a single ledger event against the audit trail (court-admissible).
+export async function getAudit(id: string): Promise<any> {
+  const res = await fetch(`${BASE}/api/audit/${encodeURIComponent(id)}`)
+  return asJson(res)
+}

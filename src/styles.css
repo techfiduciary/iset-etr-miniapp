@@ -96,3 +96,16 @@ dd{margin:0;font-size:13px;text-align:right;word-break:break-word}
 .toast{background:#10294b;border:1px solid #2b62b6;color:var(--ink);font-size:13px;padding:10px 16px;border-radius:10px;max-width:90%;box-shadow:0 8px 24px rgba(0,0,0,.35)}
 .toast.err{border-color:#7a2f2f;background:#3a1d1d;color:#f6caca}
 .toast.ok{border-color:#1f5641;background:#0e2b22;color:#9ff0cf}
+.statushdr{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:2px 0 10px}
+.statusbig{font-size:13px;font-weight:700;text-transform:capitalize;background:rgba(59,130,246,.16);color:#8fb6ff;border-radius:8px;padding:5px 10px}
+.ledger{margin-top:14px;border-top:1px solid var(--line);padding-top:12px}
+.ledger-h{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:6px}
+.levent{display:flex;gap:10px;padding:8px 0;border-bottom:1px dashed var(--line)}
+.levent:last-child{border-bottom:0}
+.ldot{width:9px;height:9px;border-radius:50%;background:var(--accent);margin-top:5px;flex:0 0 9px}
+.lbody{flex:1;min-width:0}
+.laction{font-size:13px;font-weight:600}
+.lmeta{font-size:11px;color:var(--muted);margin-top:2px;word-break:break-all}
+.lverify{font-size:11px;display:inline-block;margin-top:4px}
+.lverify.ok{color:var(--ok)}
+.lverify.err{color:var(--err)}

@@ -15,6 +15,7 @@ export default function App() {
   const [signedIn, setSignedIn] = useState(false)
   const [, setSubject] = useState('')
   const [deepId, setDeepId] = useState<string | undefined>(undefined)
+  const [verifyId, setVerifyId] = useState<string | undefined>(undefined)
 
   useEffect(() => {
     const p = new URLSearchParams(window.location.search)
@@ -53,10 +54,10 @@ export default function App() {
       </nav>
 
       <main>
-        {tab === 'home' && <Home onIssue={() => setTab('issue')} onVerify={() => setTab('verify')} />}
+        {tab === 'home' && <Home onIssue={() => setTab('issue')} onVerify={() => { setVerifyId(undefined); setTab('verify') }} />}
         {tab === 'issue' && <Issue signedIn={signedIn} />}
-        {tab === 'invoices' && <Invoices signedIn={signedIn} />}
-        {tab === 'verify' && <Verify initialId={deepId} />}
+        {tab === 'invoices' && <Invoices signedIn={signedIn} onOpen={(id) => { setVerifyId(id); setTab('verify') }} />}
+        {tab === 'verify' && <Verify initialId={verifyId || deepId} />}
         {tab === 'brand' && <Brand signedIn={signedIn} />}
       </main>
 

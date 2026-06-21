@@ -7,7 +7,7 @@ function money(n: any): string {
   return isFinite(v) && n != null && n !== '' ? v.toLocaleString() : String(n ?? '')
 }
 
-export default function Invoices({ signedIn }: { signedIn: boolean }) {
+export default function Invoices({ signedIn, onOpen }: { signedIn: boolean; onOpen: (id: string) => void }) {
   const notify = useToast()
   const [items, setItems] = useState<any[] | null>(null)
   const [err, setErr] = useState('')
@@ -24,7 +24,7 @@ export default function Invoices({ signedIn }: { signedIn: boolean }) {
     try {
       if (navigator.share) await navigator.share({ title: 'Invoice', url })
       else { await navigator.clipboard.writeText(url); notify('Link copied') }
-    } catch { /* user cancelled */ }
+    } catch { /* cancelled */ }
   }
 
   if (!signedIn) return <section className="card"><h2>My invoices</h2><p className="muted">Sign in (bind your wallet) to see the invoices you've issued.</p></section>
@@ -46,7 +46,7 @@ export default function Invoices({ signedIn }: { signedIn: boolean }) {
               <div className="invsub">{r.holder_ref || r.instrument || 'eINV'} · <span className="mono">{r.etr_id}</span></div>
             </div>
             <div className="invact">
-              <a className="btn ghost sm" href={canonicalVerifyUrl(r.etr_id)} target="_blank" rel="noreferrer">Open</a>
+              <button className="btn ghost sm" onClick={() => onOpen(r.etr_id)}>Open</button>
               <button className="btn ghost sm" onClick={() => share(r.etr_id)}>Share</button>
             </div>
           </div>

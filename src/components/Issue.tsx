@@ -9,9 +9,7 @@ function hashToBytes32(h: string): `0x${string}` {
 }
 function today(): string { return new Date().toISOString().slice(0, 10) }
 function addDays(date: string, days: number): string {
-  const d = new Date(date + 'T00:00:00')
-  d.setDate(d.getDate() + days)
-  return d.toISOString().slice(0, 10)
+  const d = new Date(date + 'T00:00:00'); d.setDate(d.getDate() + days); return d.toISOString().slice(0, 10)
 }
 function fmt(n: number): string { return n.toLocaleString(undefined, { maximumFractionDigits: 2 }) }
 
@@ -19,7 +17,26 @@ const TERMS: Array<[string, string, number | null]> = [
   ['receipt', 'Due on receipt', 0], ['net7', 'Net 7', 7], ['net15', 'Net 15', 15],
   ['net30', 'Net 30', 30], ['net60', 'Net 60', 60], ['net90', 'Net 90', 90], ['custom', 'Custom', null],
 ]
-const CURRENCIES = ['PHP', 'USD', 'cUSD', 'EUR', 'GBP', 'SGD', 'AUD', 'JPY']
+const CURRENCIES = ['PHP', 'USD', 'cUSD', 'EUR', 'GBP', 'SGD', 'AUD', 'JPY', 'INR', 'AED', 'NGN', 'KES']
+
+// Tax is jurisdiction-specific. These are convenience starting points only — the
+// rate stays editable and defaults to none. The issuer is responsible for the
+// correct tax in their jurisdiction; eINV does not determine tax for anyone.
+const TAX_PRESETS: Array<{ k: string; label: string; type: string; rate: number }> = [
+  { k: 'none', label: 'No tax', type: '', rate: 0 },
+  { k: 'ph', label: 'Philippines · VAT 12%', type: 'VAT', rate: 12 },
+  { k: 'sg', label: 'Singapore · GST 9%', type: 'GST', rate: 9 },
+  { k: 'my', label: 'Malaysia · SST 6%', type: 'SST', rate: 6 },
+  { k: 'au', label: 'Australia · GST 10%', type: 'GST', rate: 10 },
+  { k: 'nz', label: 'New Zealand · GST 15%', type: 'GST', rate: 15 },
+  { k: 'in', label: 'India · GST 18%', type: 'GST', rate: 18 },
+  { k: 'ae', label: 'UAE · VAT 5%', type: 'VAT', rate: 5 },
+  { k: 'gb', label: 'United Kingdom · VAT 20%', type: 'VAT', rate: 20 },
+  { k: 'za', label: 'South Africa · VAT 15%', type: 'VAT', rate: 15 },
+  { k: 'eu', label: 'EU · VAT (set your rate)', type: 'VAT', rate: 0 },
+  { k: 'us', label: 'US · sales tax (set your rate)', type: 'Sales tax', rate: 0 },
+  { k: 'custom', label: 'Other / custom…', type: 'Tax', rate: 0 },
+]
 
 export default function Issue({ signedIn }: { signedIn: boolean }) {
   const { address } = useAccount()
@@ -35,28 +52,27 @@ export default function Issue({ signedIn }: { signedIn: boolean }) {
   const [description, setDescription] = useState('')
   const [amount, setAmount] = useState('')
   const [currency, setCurrency] = useState('PHP')
-  const [tax, setTax] = useState('none')
+  const [taxKey, setTaxKey] = useState('none')
+  const [taxType, setTaxType] = useState('')
+  const [ratePct, setRatePct] = useState('')
   const [notes, setNotes] = useState('')
   const [busy, setBusy] = useState(false)
   const [err, setErr] = useState('')
   const [result, setResult] = useState<IssueResult | null>(null)
   const [tx, setTx] = useState<string | null>(null)
 
-  function onTerms(v: string) {
-    setTerms(v)
-    const days = TERMS.find((t) => t[0] === v)?.[2]
-    if (days != null) setDueDate(addDays(issueDate, days))
-  }
-  function onIssueDate(v: string) {
-    setIssueDate(v)
-    const days = TERMS.find((t) => t[0] === terms)?.[2]
-    if (days != null) setDueDate(addDays(v, days))
+  function onTerms(v: string) { setTerms(v); const d = TERMS.find((t) => t[0] === v)?.[2]; if (d != null) setDueDate(addDays(issueDate, d)) }
+  function onIssueDate(v: string) { setIssueDate(v); const d = TERMS.find((t) => t[0] === terms)?.[2]; if (d != null) setDueDate(addDays(v, d)) }
+  function onTaxPreset(k: string) {
+    setTaxKey(k); const p = TAX_PRESETS.find((x) => x.k === k)!
+    setTaxType(p.type); setRatePct(p.rate ? String(p.rate) : '')
   }
 
   const subtotal = Number(amount) || 0
-  const taxRate = tax === 'vat12' ? 0.12 : 0
-  const taxAmt = subtotal * taxRate
+  const rate = Math.max(0, Number(ratePct) || 0) / 100
+  const taxAmt = taxKey === 'none' ? 0 : subtotal * rate
   const total = subtotal + taxAmt
+  const taxLine = taxKey !== 'none' && (taxType || ratePct) ? `${taxType || 'Tax'} ${ratePct || 0}%` : ''
 
   async function handleIssue() {
     setErr(''); setResult(null); setTx(null)
@@ -73,14 +89,11 @@ export default function Issue({ signedIn }: { signedIn: boolean }) {
           invoice_no: invoiceNo, debtor: customer, customer_email: email,
           issue_date: issueDate, due_date: dueDate, terms: TERMS.find((t) => t[0] === terms)?.[1] || terms,
           description, subtotal: subtotal.toFixed(2),
-          tax: tax === 'vat12' ? 'VAT 12%' : 'None', tax_amount: taxAmt.toFixed(2),
+          tax: taxAmt > 0 ? taxLine : 'None', tax_amount: taxAmt.toFixed(2),
         },
       })
-      setResult(r)
-      notify('Invoice issued & signed')
-    } catch (e: any) {
-      setErr(e?.message || 'Issuance failed'); notify('Issuance failed', 'err')
-    } finally { setBusy(false) }
+      setResult(r); notify('Invoice issued & signed')
+    } catch (e: any) { setErr(e?.message || 'Issuance failed'); notify('Issuance failed', 'err') } finally { setBusy(false) }
   }
 
   function anchor() {
@@ -109,27 +122,12 @@ export default function Issue({ signedIn }: { signedIn: boolean }) {
       <p className="muted">For businesses and individuals — you stay the holder; your customer is the one who owes.</p>
 
       <div className="row">
-        <div style={{ flex: 1 }}>
-          <label className="lbl">Invoice no.</label>
-          <input className="input" value={invoiceNo} onChange={(e) => setInvoiceNo(e.target.value)} />
-        </div>
-        <div style={{ flex: 1 }}>
-          <label className="lbl">Issue date</label>
-          <input className="input" type="date" value={issueDate} onChange={(e) => onIssueDate(e.target.value)} />
-        </div>
+        <div style={{ flex: 1 }}><label className="lbl">Invoice no.</label><input className="input" value={invoiceNo} onChange={(e) => setInvoiceNo(e.target.value)} /></div>
+        <div style={{ flex: 1 }}><label className="lbl">Issue date</label><input className="input" type="date" value={issueDate} onChange={(e) => onIssueDate(e.target.value)} /></div>
       </div>
-
       <div className="row">
-        <div style={{ flex: 1 }}>
-          <label className="lbl">Payment terms</label>
-          <select className="input" value={terms} onChange={(e) => onTerms(e.target.value)}>
-            {TERMS.map(([v, label]) => <option key={v} value={v}>{label}</option>)}
-          </select>
-        </div>
-        <div style={{ flex: 1 }}>
-          <label className="lbl">Due date</label>
-          <input className="input" type="date" value={dueDate} onChange={(e) => { setDueDate(e.target.value); setTerms('custom') }} />
-        </div>
+        <div style={{ flex: 1 }}><label className="lbl">Payment terms</label><select className="input" value={terms} onChange={(e) => onTerms(e.target.value)}>{TERMS.map(([v, l]) => <option key={v} value={v}>{l}</option>)}</select></div>
+        <div style={{ flex: 1 }}><label className="lbl">Due date</label><input className="input" type="date" value={dueDate} onChange={(e) => { setDueDate(e.target.value); setTerms('custom') }} /></div>
       </div>
 
       <label className="lbl">Customer — who owes you</label>
@@ -140,26 +138,27 @@ export default function Issue({ signedIn }: { signedIn: boolean }) {
       <input className="input" placeholder="e.g. 200 units · delivery DR-88" value={description} onChange={(e) => setDescription(e.target.value)} />
 
       <div className="row">
-        <div style={{ flex: 2 }}>
-          <label className="lbl">Amount (excl. tax)</label>
-          <input className="input" inputMode="decimal" placeholder="250000" value={amount} onChange={(e) => setAmount(e.target.value)} />
-        </div>
-        <div style={{ flex: 1 }}>
-          <label className="lbl">Currency</label>
-          <select className="input" value={currency} onChange={(e) => setCurrency(e.target.value)}>
-            {CURRENCIES.map((c) => <option key={c}>{c}</option>)}
-          </select>
-        </div>
+        <div style={{ flex: 2 }}><label className="lbl">Amount (excl. tax)</label><input className="input" inputMode="decimal" placeholder="250000" value={amount} onChange={(e) => setAmount(e.target.value)} /></div>
+        <div style={{ flex: 1 }}><label className="lbl">Currency</label><select className="input" value={currency} onChange={(e) => setCurrency(e.target.value)}>{CURRENCIES.map((c) => <option key={c}>{c}</option>)}</select></div>
       </div>
-      <label className="lbl">Tax</label>
-      <select className="input" value={tax} onChange={(e) => setTax(e.target.value)}>
-        <option value="none">No tax</option>
-        <option value="vat12">VAT 12% (PH)</option>
+
+      <label className="lbl">Tax (by your jurisdiction)</label>
+      <select className="input" value={taxKey} onChange={(e) => onTaxPreset(e.target.value)}>
+        {TAX_PRESETS.map((p) => <option key={p.k} value={p.k}>{p.label}</option>)}
       </select>
+      {taxKey !== 'none' && (
+        <>
+          <div className="row" style={{ marginTop: 8 }}>
+            {taxKey === 'custom' && <div style={{ flex: 1 }}><label className="lbl" style={{ marginTop: 0 }}>Tax name</label><input className="input" placeholder="VAT / GST / Sales tax" value={taxType} onChange={(e) => setTaxType(e.target.value)} /></div>}
+            <div style={{ flex: 1 }}><label className="lbl" style={{ marginTop: 0 }}>Rate %</label><input className="input" inputMode="decimal" placeholder="0" value={ratePct} onChange={(e) => setRatePct(e.target.value)} /></div>
+          </div>
+          <p className="note" style={{ marginTop: 8 }}>Presets are starting points — confirm the current rate for your jurisdiction. You're responsible for the tax you apply; eINV does not determine it.</p>
+        </>
+      )}
 
       <div className="totals">
         <div><span>Subtotal</span><span>{fmt(subtotal)} {currency}</span></div>
-        {taxRate > 0 && <div><span>VAT 12%</span><span>{fmt(taxAmt)} {currency}</span></div>}
+        {taxAmt > 0 && <div><span>{taxLine}</span><span>{fmt(taxAmt)} {currency}</span></div>}
         <div className="grand"><span>Total</span><span>{fmt(total)} {currency}</span></div>
       </div>
 
