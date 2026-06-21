@@ -1,15 +1,15 @@
 import { http, createConfig } from 'wagmi'
-import { celo, celoAlfajores } from 'wagmi/chains'
+import { celo } from 'wagmi/chains'
 import { injected } from 'wagmi/connectors'
-import { ACTIVE_CHAIN } from './lib/chain'
+import { ACTIVE_CHAIN, celoSepolia } from './lib/chain'
 
 // MiniPay injects an EIP-1193 provider (window.ethereum.isMiniPay) and auto-connects.
 // `injected` covers MiniPay in-app and a desktop browser wallet for local testing.
 export const wagmiConfig = createConfig({
-  chains: [celoAlfajores, celo],
+  chains: [celoSepolia, celo],
   connectors: [injected({ shimDisconnect: true })],
   transports: {
-    [celoAlfajores.id]: http(),
+    [celoSepolia.id]: http(),
     [celo.id]: http(),
   },
 })

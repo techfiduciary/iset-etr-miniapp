@@ -30,7 +30,7 @@ npm run dev                # http://localhost:5173
 > `localhost:5173`. Verify works against any public record id.
 
 ## Contracts
-See [`contracts/README.md`](contracts/README.md). Deploy to Alfajores, then paste the
+See [`contracts/README.md`](contracts/README.md). Deploy to Celo Sepolia, then paste the
 printed addresses into `.env` (`VITE_ANCHOR_ADDRESS`, `VITE_ETRNOTE_ADDRESS`).
 
 ## Deploy (Cloudflare Pages)

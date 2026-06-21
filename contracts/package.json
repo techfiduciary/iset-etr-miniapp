@@ -4,7 +4,7 @@
   "version": "0.1.0",
   "scripts": {
     "build": "hardhat compile",
-    "deploy:alfajores": "hardhat run scripts/deploy.ts --network alfajores",
+    "deploy:celosepolia": "hardhat run scripts/deploy.ts --network celoSepolia",
     "deploy:celo": "hardhat run scripts/deploy.ts --network celo"
   },
   "devDependencies": {

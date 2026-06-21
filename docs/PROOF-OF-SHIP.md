@@ -15,7 +15,7 @@ activity + on-chain activity**, tracked via **Karma GAP**.
 
 ## To submit (manual steps)
 1. **Push repo to GitHub** (public).
-2. **Deploy contracts** to Alfajores → fund a test wallet at <https://faucet.celo.org/alfajores>.
+2. **Deploy contracts** to Celo Sepolia → fund a test wallet at <https://faucet.celo.org/celo-sepolia>.
 3. **Deploy MiniApp** to Cloudflare Pages (`npm run deploy`).
 4. **Register on Karma GAP**: <https://gap.karmahq.xyz> → create a project for the Celo Proof of Ship community; attach repo + contract addresses + live URL.
 5. **List the Mini App in MiniPay**: site-tester / dev flow per <https://docs.celo.org/build/build-on-minipay>.

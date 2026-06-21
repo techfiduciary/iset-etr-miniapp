@@ -24,7 +24,7 @@ re-implement issuance, signing, or the registry.
 ## Stack
 - Front end: Vite + React + wagmi/viem → static `dist/` → Cloudflare Pages.
 - Auth: wallet sign-in (SIWE) against the ISET engine.
-- Contracts: Hardhat + OpenZeppelin v5 (`contracts/`), Celo Alfajores → mainnet (gated).
+- Contracts: Hardhat + OpenZeppelin v5 (`contracts/`), Celo Sepolia → mainnet (gated).
 
 ## Contributing
 Work on a branch; conventional commits; open a PR. Don't commit secrets or `.env`.
