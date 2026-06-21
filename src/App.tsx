@@ -25,8 +25,8 @@ export default function App() {
     <div className="app">
       <header className="topbar">
         <div className="brand">
-          <span className="mark">ISET</span>
-          <span className="sub">eINV · invoice advance</span>
+          <span className="mark">eInvoice</span>
+          <span className="sub">by ISET · on MiniPay</span>
         </div>
         <Connect
           signedIn={signedIn}
