@@ -1,6 +1,8 @@
 import {
   IconLock, IconKey, IconArrowRight, IconFileInvoice, IconCash, IconCircleCheck,
   IconUsers, IconTruck, IconBuildingWarehouse, IconBuildingFactory2, IconTools, IconWorld,
+  IconSpray, IconShield, IconCode, IconSpeakerphone, IconPrinter, IconConfetti,
+  IconStethoscope, IconPlant2, IconForklift, IconBuildingBank,
 } from '@tabler/icons-react'
 
 const STEPS = [
@@ -13,9 +15,19 @@ const INDUSTRIES = [
   { Icon: IconUsers, t: 'Staffing & manpower', s: 'Pay workers weekly — clients pay in 30–60 days' },
   { Icon: IconTruck, t: 'Trucking & logistics', s: 'Fuel and drivers now — shippers pay in 30–90' },
   { Icon: IconBuildingWarehouse, t: 'Wholesale & distribution', s: 'Restock now — retailers buy on terms' },
-  { Icon: IconBuildingFactory2, t: 'Manufacturers & suppliers', s: 'Produce now — big buyers pay net-60' },
-  { Icon: IconTools, t: 'Construction subcontractors', s: 'Materials & labor now — billed over months' },
-  { Icon: IconWorld, t: 'Import / export traders', s: 'Pay producers now — buyers pay later' },
+  { Icon: IconBuildingFactory2, t: 'Manufacturing & supply', s: 'Produce now — big buyers pay net-60' },
+  { Icon: IconTools, t: 'Construction & subcontractors', s: 'Materials & labor now — billed over months' },
+  { Icon: IconWorld, t: 'Import / export trade', s: 'Pay producers now — buyers pay later' },
+  { Icon: IconSpray, t: 'Cleaning & facilities', s: 'Monthly service contracts, paid in arrears' },
+  { Icon: IconShield, t: 'Security agencies', s: 'Guards paid now — clients billed monthly' },
+  { Icon: IconCode, t: 'IT & software services', s: 'Build now — enterprises pay net-30/60' },
+  { Icon: IconSpeakerphone, t: 'Marketing & creative', s: 'Run campaigns now — invoiced later' },
+  { Icon: IconPrinter, t: 'Printing & signage', s: 'Produce orders before customers settle' },
+  { Icon: IconConfetti, t: 'Events & catering', s: 'Cover costs upfront — corporates pay after' },
+  { Icon: IconStethoscope, t: 'Clinics & labs', s: 'Service now — HMOs / insurers reimburse later' },
+  { Icon: IconPlant2, t: 'Agriculture & food supply', s: 'Deliver to markets — paid on terms' },
+  { Icon: IconForklift, t: 'Equipment rental', s: 'Assets out now — billed per cycle' },
+  { Icon: IconBuildingBank, t: 'Government suppliers', s: 'Deliver now — agencies pay slowly but surely' },
 ]
 
 export default function Home({ onIssue, onVerify }: { onIssue: () => void; onVerify: () => void }) {
@@ -51,7 +63,7 @@ export default function Home({ onIssue, onVerify }: { onIssue: () => void; onVer
 
       <section className="block">
         <h2>Who uses this</h2>
-        <p className="muted">Businesses that deliver first and get paid on terms.</p>
+        <p className="muted">Any MSME or business that delivers first and gets paid on terms.</p>
         <div className="industries">
           {INDUSTRIES.map((x, i) => (
             <div className="icard" key={i}>
@@ -61,6 +73,7 @@ export default function Home({ onIssue, onVerify }: { onIssue: () => void; onVer
             </div>
           ))}
         </div>
+        <p className="muted" style={{ marginTop: '12px' }}>…and anyone else who invoices a customer and waits to get paid.</p>
       </section>
 
       <section className="block">

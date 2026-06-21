@@ -1,0 +1,12 @@
+{
+  "name": "eInvoice — by ISET",
+  "short_name": "eInvoice",
+  "description": "Turn an unpaid invoice into cash. Issue a signed eINV and get an advance against it.",
+  "icons": [
+    { "src": "/icon.png", "sizes": "285x285", "type": "image/png", "purpose": "any maskable" }
+  ],
+  "theme_color": "#0b1f3a",
+  "background_color": "#0b1f3a",
+  "display": "standalone",
+  "start_url": "/"
+}
