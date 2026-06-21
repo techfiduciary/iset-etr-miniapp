@@ -109,7 +109,7 @@ export default function Issue({ signedIn }: { signedIn: boolean }) {
     if (!result) return
     const url = canonicalVerifyUrl(result.etr_id)
     try {
-      if (navigator.share) await navigator.share({ title: `Invoice ${invoiceNo}`, text: 'Your invoice', url })
+      if (navigator.share) await navigator.share({ title: `Invoice ${invoiceNo}`, text: `Invoice ${invoiceNo} — ${total.toFixed(2)} ${currency}, due ${dueDate}. View & verify:`, url })
       else { await navigator.clipboard.writeText(url); notify('Invoice link copied') }
     } catch { /* cancelled */ }
   }
@@ -178,7 +178,7 @@ export default function Issue({ signedIn }: { signedIn: boolean }) {
             <dt>Record hash</dt><dd className="mono small">{result.record_hash}</dd>
           </dl>
           <div className="actions">
-            <button className="btn" onClick={share}>Share invoice</button>
+            <button className="btn" onClick={share}>Send to customer</button>
             <a className="btn ghost" href={canonicalVerifyUrl(result.etr_id)} target="_blank" rel="noreferrer">Open</a>
           </div>
           {advance != null && (
