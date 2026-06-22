@@ -41,7 +41,7 @@ export default function Marketplace() {
         )
       })}
 
-      <a className="btn full" style={{ marginTop: '6px', textAlign: 'center' }} href="mailto:fiduciary@iset.finance?subject=eInvoice%20funder%20access&body=I%27d%20like%20to%20be%20a%20verified%20funder%20on%20eInvoice.">Request funder access</a>
+      <a className="btn cta" href="mailto:fiduciary@iset.finance?subject=eInvoice%20funder%20access&body=I%27d%20like%20to%20be%20a%20verified%20funder%20on%20eInvoice.">Request funder access</a>
 
       <div className="mdisc">
         How it works: you fund a verified invoice at a discount and are repaid in full when the customer pays — your profit is the discount, your risk is non-payment. eInvoice is non-custodial and never guarantees returns. Funding opens to verified (KYC'd) funders once compliance clears; nothing here is an offer to invest.
