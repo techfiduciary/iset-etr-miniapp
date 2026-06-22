@@ -135,4 +135,7 @@ dd{margin:0;font-size:13px;text-align:right;word-break:break-word}
 .seg{display:flex;border:1px solid var(--line);border-radius:9px;overflow:hidden}
 .seg button{flex:1;background:var(--bg2);color:var(--muted);border:0;padding:8px;font-size:13px;font-weight:600;cursor:pointer}
 .seg button.on{background:var(--accent);color:#fff}
+.vbadges{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 4px}
+.vbadge{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--muted);background:var(--bg2);border:1px solid var(--line);border-radius:999px;padding:4px 9px}
+.vbadge.ok{color:var(--ok);border-color:rgba(52,211,153,.35);background:rgba(52,211,153,.10)}
 .invstatus.s-discharged{background:rgba(52,211,153,.14);color:var(--ok)}
