@@ -53,7 +53,9 @@ dd{margin:0;font-size:13px;text-align:right;word-break:break-word}
 .home{padding-bottom:20px}
 .hero{padding:20px 2px 6px}
 .eyebrow{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#8fb6ff;font-weight:700}
-.hero h1{font-size:30px;line-height:1.08;margin:10px 0 8px;font-weight:800;letter-spacing:-.02em}
+.hero h1{font-size:30px;line-height:1.08;margin:10px 0 8px;font-weight:800;letter-spacing:-.02em;min-height:66px}
+.hero-rot{animation:headfade .55s ease}
+@keyframes headfade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 .hero p{color:var(--muted);font-size:14px;margin:0 0 14px;line-height:1.5}
 .trust{display:flex;flex-wrap:wrap;gap:14px;margin-top:16px;font-size:12px;color:var(--muted)}
 .trust span{display:inline-flex;align-items:center;gap:6px}

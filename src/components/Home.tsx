@@ -1,9 +1,19 @@
+import { useEffect, useState } from 'react'
 import {
   IconLock, IconKey, IconArrowRight, IconFileInvoice, IconCash, IconCircleCheck,
   IconUsers, IconTruck, IconBuildingWarehouse, IconBuildingFactory2, IconTools, IconWorld,
   IconSpray, IconShield, IconCode, IconSpeakerphone, IconPrinter, IconConfetti,
   IconStethoscope, IconPlant2, IconForklift, IconBuildingBank,
 } from '@tabler/icons-react'
+
+// Rotating hero headline — each is exactly 2 short lines (≤16 chars/line) so the
+// height never changes and it never wraps to a 3rd row.
+const HEADLINES: Array<[string, string]> = [
+  ['Get paid now,', 'not in 90 days.'],
+  ['Turn invoices', 'into cash now.'],
+  ['Cash flow now —', 'no loan needed.'],
+  ['Your money,', 'unlocked today.'],
+]
 
 const STEPS = [
   { Icon: IconFileInvoice, t: 'Issue your invoice', s: 'Recorded as a signed eINV' },
@@ -31,11 +41,16 @@ const INDUSTRIES = [
 ]
 
 export default function Home({ onIssue, onVerify }: { onIssue: () => void; onVerify: () => void }) {
+  const [hi, setHi] = useState(0)
+  useEffect(() => {
+    const t = setInterval(() => setHi((i) => (i + 1) % HEADLINES.length), 4000)
+    return () => clearInterval(t)
+  }, [])
   return (
     <div className="home">
       <section className="hero">
         <div className="eyebrow">Invoice financing · on MiniPay</div>
-        <h1>Get paid now,<br />not in 90 days.</h1>
+        <h1 key={hi} className="hero-rot">{HEADLINES[hi][0]}<br />{HEADLINES[hi][1]}</h1>
         <p>Record an unpaid invoice as a signed eINV, get a cash advance against it today, and let your customer pay on time. No new loan. No collateral.</p>
         <button className="btn full" onClick={onIssue}>Issue an invoice</button>
         <div className="trust">
