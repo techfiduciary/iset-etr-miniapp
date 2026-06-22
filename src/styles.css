@@ -132,4 +132,7 @@ dd{margin:0;font-size:13px;text-align:right;word-break:break-word}
 .mrow span{display:inline-flex;align-items:center;gap:5px}
 .mfund{opacity:.55;cursor:not-allowed}
 .mdisc{font-size:11px;color:var(--muted);line-height:1.6;border-top:1px dashed var(--line);padding-top:10px;margin-top:14px}
+.seg{display:flex;border:1px solid var(--line);border-radius:9px;overflow:hidden}
+.seg button{flex:1;background:var(--bg2);color:var(--muted);border:0;padding:8px;font-size:13px;font-weight:600;cursor:pointer}
+.seg button.on{background:var(--accent);color:#fff}
 .invstatus.s-discharged{background:rgba(52,211,153,.14);color:var(--ok)}

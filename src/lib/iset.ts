@@ -95,6 +95,7 @@ export function canonicalVerifyUrl(id: string): string {
 export interface SubscriberProfile {
   name?: string; logo?: string | null; color?: string; verify?: string
   tin?: string; address?: string; email?: string
+  handle?: string; acct?: 'individual' | 'institution'
 }
 
 export async function getSubscriber(): Promise<any> {
@@ -127,6 +128,15 @@ export async function transferEtr(etr_id: string, action: string, opts: { to_ref
   const res = await fetch(`${BASE}/api/etr/transfer`, {
     method: 'POST', headers: { 'Content-Type': 'application/json', ...authHeaders() },
     body: JSON.stringify({ etr_id, action, ...opts }),
+  })
+  return asJson(res)
+}
+
+// Claim an ungated @handle (vanity identity) bound to the signed-in wallet.
+export async function claimHandle(handle: string, acct: 'individual' | 'institution'): Promise<{ ok: boolean; handle: string; acct: string }> {
+  const res = await fetch(`${BASE}/api/handle/claim`, {
+    method: 'POST', headers: { 'Content-Type': 'application/json', ...authHeaders() },
+    body: JSON.stringify({ handle, acct }),
   })
   return asJson(res)
 }

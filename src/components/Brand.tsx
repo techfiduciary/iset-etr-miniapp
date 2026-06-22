@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { getSubscriber, saveSubscriber, hasSession } from '../lib/iset'
+import { getSubscriber, saveSubscriber, claimHandle, hasSession } from '../lib/iset'
 import { useToast } from '../lib/toast'
 
 export default function Brand({ signedIn }: { signedIn: boolean }) {
@@ -11,7 +11,10 @@ export default function Brand({ signedIn }: { signedIn: boolean }) {
   const [address, setAddress] = useState('')
   const [email, setEmail] = useState('')
   const [logo, setLogo] = useState<string | null>(null)
+  const [handle, setHandle] = useState('')
+  const [acct, setAcct] = useState<'individual' | 'institution'>('individual')
   const [busy, setBusy] = useState(false)
+  const [claiming, setClaiming] = useState(false)
   const [loaded, setLoaded] = useState(false)
 
   useEffect(() => {
@@ -21,6 +24,7 @@ export default function Brand({ signedIn }: { signedIn: boolean }) {
           const x = p?.profile || p || {}
           setName(x.name || ''); setColor(x.color || '#2456C8'); setVerify(x.verify || '')
           setTin(x.tin || ''); setAddress(x.address || ''); setEmail(x.email || ''); setLogo(x.logo || null)
+          setHandle(x.handle || ''); if (x.acct === 'institution') setAcct('institution')
         })
         .catch(() => {})
         .finally(() => setLoaded(true))
@@ -33,26 +37,50 @@ export default function Brand({ signedIn }: { signedIn: boolean }) {
     const r = new FileReader(); r.onload = () => setLogo(String(r.result)); r.readAsDataURL(f)
   }
 
+  async function claim() {
+    if (!signedIn || !hasSession()) { notify('Sign in (bind your wallet) first', 'err'); return }
+    const h = handle.trim().replace(/^@/, '').toLowerCase()
+    if (!/^[a-z0-9_]{3,30}$/.test(h)) { notify('Handle: 3–30 chars — letters, numbers, underscore', 'err'); return }
+    setClaiming(true)
+    try { const r = await claimHandle(h, acct); setHandle((r.handle || '@' + h).replace(/^@/, '')); notify(`Claimed @${h}`) }
+    catch (e: any) { notify(e?.message || 'Could not claim that handle', 'err') }
+    finally { setClaiming(false) }
+  }
+
   async function save() {
     if (!signedIn || !hasSession()) { notify('Sign in (bind your wallet) first', 'err'); return }
     setBusy(true)
-    try { await saveSubscriber({ name, color, verify, tin, address, email, logo }); notify('Brand & details saved') }
+    try { await saveSubscriber({ name, color, verify, tin, address, email, logo, acct }); notify('Brand & details saved') }
     catch (e: any) { notify(e?.message || 'Save failed', 'err') }
     finally { setBusy(false) }
   }
 
   return (
     <section className="card">
-      <h2>Your brand &amp; details</h2>
-      <p className="muted">Your logo, colour, and business details appear on every invoice your customers open — not ours.</p>
+      <h2>Your identity &amp; brand</h2>
+      <p className="muted">Claim a handle, add your logo and details — they appear on every invoice your customers open.</p>
 
       <div className="brandprev" style={{ borderColor: color }}>
         {logo ? <img src={logo} alt="" className="brandprev-logo" /> : <div className="brandprev-ph">logo</div>}
         <div>
           <div className="brandprev-name" style={{ color }}>{name || 'Your business'}</div>
-          <div className="brandprev-sub">{tin ? `TIN ${tin}` : 'invoice · powered by ISET'}</div>
+          <div className="brandprev-sub">{handle ? '@' + handle : (acct === 'institution' ? 'company' : 'individual')}{tin ? ` · TIN ${tin}` : ''}</div>
         </div>
       </div>
+
+      <label className="lbl">Your handle</label>
+      <div className="row">
+        <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: 6 }}>
+          <span style={{ color: 'var(--muted)' }}>@</span>
+          <input className="input" placeholder="yourname" value={handle} onChange={(e) => setHandle(e.target.value.replace(/^@/, ''))} />
+        </div>
+        <button className="btn" onClick={claim} disabled={claiming}>{claiming ? '…' : 'Claim'}</button>
+      </div>
+      <div className="seg" style={{ marginTop: '8px' }}>
+        <button className={acct === 'individual' ? 'on' : ''} onClick={() => setAcct('individual')}>Individual</button>
+        <button className={acct === 'institution' ? 'on' : ''} onClick={() => setAcct('institution')}>Company</button>
+      </div>
+      <p className="note" style={{ marginTop: '6px' }}>A company handle is its own identity, separate from your personal one. This is a friendly handle — not the authoritative fID rail.</p>
 
       <label className="lbl">Business / your name</label>
       <input className="input" placeholder="Dela Cruz Trading" value={name} onChange={(e) => setName(e.target.value)} />
@@ -76,7 +104,7 @@ export default function Brand({ signedIn }: { signedIn: boolean }) {
       </div>
 
       <button className="btn full" onClick={save} disabled={busy}>{busy ? 'Saving…' : 'Save brand & details'}</button>
-      <p className="note">Stored with your account and applied to the customer-facing record. ISET stays only in the signature and provenance. A valid tax invoice in many places requires your TIN and address — add them here.</p>
+      <p className="note">Stored with your account and applied to the customer-facing record. ISET stays only in the signature and provenance.</p>
     </section>
   )
 }
