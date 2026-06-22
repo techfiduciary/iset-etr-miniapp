@@ -94,7 +94,7 @@ export function canonicalVerifyUrl(id: string): string {
 // ── Subscriber profile (white-label branding) ─────────────────────────────────
 export interface SubscriberProfile {
   name?: string; logo?: string | null; color?: string; verify?: string
-  tin?: string; address?: string; email?: string
+  tin?: string; address?: string; email?: string; ppsr?: string
   handle?: string; acct?: 'individual' | 'institution'
 }
 

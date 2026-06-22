@@ -5,7 +5,8 @@
   "scripts": {
     "build": "hardhat compile",
     "deploy:celosepolia": "hardhat run scripts/deploy.ts --network celoSepolia",
-    "deploy:celo": "hardhat run scripts/deploy.ts --network celo"
+    "deploy:celo": "hardhat run scripts/deploy.ts --network celo",
+    "deploy:celo-anchor": "hardhat run scripts/deploy-anchor.ts --network celo"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox-viem": "^3.0.0",

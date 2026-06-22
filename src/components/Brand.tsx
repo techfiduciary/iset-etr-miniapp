@@ -8,6 +8,7 @@ export default function Brand({ signedIn }: { signedIn: boolean }) {
   const [color, setColor] = useState('#2456C8')
   const [verify, setVerify] = useState('')
   const [tin, setTin] = useState('')
+  const [ppsr, setPpsr] = useState('')
   const [address, setAddress] = useState('')
   const [email, setEmail] = useState('')
   const [logo, setLogo] = useState<string | null>(null)
@@ -23,7 +24,7 @@ export default function Brand({ signedIn }: { signedIn: boolean }) {
         .then((p) => {
           const x = p?.profile || p || {}
           setName(x.name || ''); setColor(x.color || '#2456C8'); setVerify(x.verify || '')
-          setTin(x.tin || ''); setAddress(x.address || ''); setEmail(x.email || ''); setLogo(x.logo || null)
+          setTin(x.tin || ''); setPpsr(x.ppsr || ''); setAddress(x.address || ''); setEmail(x.email || ''); setLogo(x.logo || null)
           setHandle(x.handle || ''); if (x.acct === 'institution') setAcct('institution')
         })
         .catch(() => {})
@@ -50,7 +51,7 @@ export default function Brand({ signedIn }: { signedIn: boolean }) {
   async function save() {
     if (!signedIn || !hasSession()) { notify('Sign in (bind your wallet) first', 'err'); return }
     setBusy(true)
-    try { await saveSubscriber({ name, color, verify, tin, address, email, logo, acct }); notify('Brand & details saved') }
+    try { await saveSubscriber({ name, color, verify, tin, ppsr, address, email, logo, acct }); notify('Brand & details saved') }
     catch (e: any) { notify(e?.message || 'Save failed', 'err') }
     finally { setBusy(false) }
   }
@@ -84,8 +85,18 @@ export default function Brand({ signedIn }: { signedIn: boolean }) {
 
       <label className="lbl">Business / your name</label>
       <input className="input" placeholder="Dela Cruz Trading" value={name} onChange={(e) => setName(e.target.value)} />
+
       <label className="lbl">Tax ID / TIN (for valid tax invoices)</label>
       <input className="input" placeholder="000-000-000-000" value={tin} onChange={(e) => setTin(e.target.value)} />
+
+      <label className="lbl">PPSR Individual ID</label>
+      <input className="input" placeholder="2026-292369" value={ppsr} onChange={(e) => setPpsr(e.target.value)}
+        title="Log in at PPSR → top-right Settings icon → My Account to find your PPSR Individual ID" />
+      <p className="note" style={{ marginTop: '4px' }}>
+        Used to perfect an invoice assignment (RA 11057). Find it at PPSR → Settings (top-right) → My Account.{' '}
+        <a className="link" href="https://portal.ppsr.lra.gov.ph/account/register?type=Individual" target="_blank" rel="noreferrer">Register a PPSR Individual ID ↗</a>
+      </p>
+
       <label className="lbl">Business address</label>
       <input className="input" placeholder="Street, City, Country" value={address} onChange={(e) => setAddress(e.target.value)} />
       <label className="lbl">Contact email</label>
