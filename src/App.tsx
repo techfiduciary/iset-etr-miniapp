@@ -5,11 +5,12 @@ import Home from './components/Home'
 import Verify from './components/Verify'
 import Issue from './components/Issue'
 import Invoices from './components/Invoices'
+import Marketplace from './components/Marketplace'
 import Brand from './components/Brand'
 import Legal from './components/Legal'
 import { IS_TESTNET, ACTIVE_CHAIN } from './lib/chain'
 
-type Tab = 'home' | 'issue' | 'invoices' | 'verify' | 'brand' | 'legal'
+type Tab = 'home' | 'issue' | 'invoices' | 'market' | 'verify' | 'brand' | 'legal'
 
 export default function App() {
   const [tab, setTab] = useState<Tab>('home')
@@ -22,7 +23,7 @@ export default function App() {
     const p = new URLSearchParams(window.location.search)
     const id = p.get('id'); const t = p.get('tab') as Tab | null
     if (id) { setDeepId(id); setTab('verify') }
-    else if (t && ['issue', 'invoices', 'verify', 'brand', 'legal'].includes(t)) setTab(t)
+    else if (t && ['issue', 'invoices', 'market', 'verify', 'brand', 'legal'].includes(t)) setTab(t)
   }, [])
 
   return (
@@ -51,6 +52,7 @@ export default function App() {
         <button className={tab === 'home' ? 'on' : ''} onClick={() => setTab('home')}>Home</button>
         <button className={tab === 'issue' ? 'on' : ''} onClick={() => setTab('issue')}>Issue</button>
         <button className={tab === 'invoices' ? 'on' : ''} onClick={() => setTab('invoices')}>Invoices</button>
+        <button className={tab === 'market' ? 'on' : ''} onClick={() => setTab('market')}>Market</button>
         <button className={tab === 'verify' ? 'on' : ''} onClick={() => setTab('verify')}>Verify</button>
       </nav>
 
@@ -58,6 +60,7 @@ export default function App() {
         {tab === 'home' && <Home onIssue={() => setTab('issue')} onVerify={() => { setVerifyId(undefined); setTab('verify') }} />}
         {tab === 'issue' && <Issue signedIn={signedIn} />}
         {tab === 'invoices' && <Invoices signedIn={signedIn} onOpen={(id) => { setVerifyId(id); setTab('verify') }} />}
+        {tab === 'market' && <Marketplace />}
         {tab === 'verify' && <Verify initialId={verifyId || deepId} />}
         {tab === 'brand' && <Brand signedIn={signedIn} />}
         {tab === 'legal' && <Legal />}
@@ -65,7 +68,7 @@ export default function App() {
 
       <footer className="foot">
         <div className="footlinks">
-          <button onClick={() => setTab('brand')}>Brand</button> · <button onClick={() => setTab('legal')}>Terms &amp; privacy</button>
+          <button onClick={() => setTab('brand')}>Brand</button> · <button onClick={() => setTab('market')}>Marketplace</button> · <button onClick={() => setTab('legal')}>Terms &amp; privacy</button>
         </div>
         Issuer &amp; registry: ISET · signatures ML-DSA-65 (post-quantum). Celo is a settlement &amp; notarisation bridge — the registry is the point of control.
       </footer>
