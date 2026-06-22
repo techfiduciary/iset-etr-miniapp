@@ -6,7 +6,7 @@ dotenv.config();
 const PK = process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [];
 
 const config: HardhatUserConfig = {
-  solidity: { version: "0.8.24", settings: { optimizer: { enabled: true, runs: 200 } } },
+  solidity: { version: "0.8.28", settings: { optimizer: { enabled: true, runs: 200 }, evmVersion: "cancun" } },
   networks: {
     celoSepolia: { url: "https://forno.celo-sepolia.celo-testnet.org", chainId: 11142220, accounts: PK },
     celo: { url: "https://forno.celo.org", chainId: 42220, accounts: PK },
